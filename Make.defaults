@@ -1,0 +1,29 @@
+CC	= gcc
+PRE 	=
+AR	= ar
+LD	= gcc
+ARCH	= $(shell $(CC) -dumpmachine | cut -f1 -d- | sed s,i[3456789]86,ia32,)
+CFLAGS	:= -O0 -ggdb
+FLAGS	= $(CFLAGS) \
+	  -std=c11 -ffreestanding -fno-builtin \
+	  -fshort-wchar -fomit-frame-pointer \
+	  -Wall -Wsign-compare -Werror -Werror=sign-compare \
+	  -I$(shell $(CC) -print-file-name=include) -Iinclude \
+	  -fno-zero-initialized-in-bss
+
+ifeq ($(ARCH),x86_64)
+	FLAGS  += -mno-mmx -mno-sse -mno-red-zone -nostdinc \
+		    -maccumulate-outgoing-args
+endif
+ifeq ($(ARCH), ia32)
+	FLAGS += -mno-mmx -mno-sse -mno-red-zone -nostdinc \
+		  -maccumulate-outgoing-args -m32
+endif
+ifeq ($(ARCH),aarch64)
+	FLAGS  += -ffreestanding -I$(shell $(CC) -print-file-name=include)
+endif
+ifeq ($(ARCH),arm)
+	FLAGS  += -ffreestanding -I$(shell $(CC) -print-file-name=include)
+endif
+
+
