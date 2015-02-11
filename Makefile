@@ -6,7 +6,7 @@ cooper.a : init.o rsp.o
 	$(PRE)$(AR) cr $@ $^
 
 test : test.c cooper.a
-	$(PRE)$(CC) -Wall -Werror -o $@ $^ cooper.a
+	$(PRE)$(CC) -ggdb -Wall -Werror -o $@ $^ cooper.a -lrt
 
 %.o : %.c
 	$(PRE)$(CC) $(FLAGS) -ggdb -c -o $@ $^

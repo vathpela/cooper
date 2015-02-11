@@ -4,4 +4,5 @@
 #include <lib.h>
 #include <state.h>
 #include <rsp.h>
+#include <debug.h>
 

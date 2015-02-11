@@ -1,14 +1,16 @@
 
 #include <decls.h>
 
-cooper_state_t cooper_state = {
+static cooper_state_t cooper_state_default = {
 	.serial_timer = -1,
-	.service_interval = { 0, 200000 },
-	.acks = 0,
+	.service_interval = { 0, 200000000 },
+	.acks = 1,
 };
+cooper_state_t cooper_state;
 cooper_set_timer_fn cooper_set_timer = 0;
 cooper_serial_read_fn cooper_serial_read = 0;
 cooper_serial_write_fn cooper_serial_write_raw = 0;
+static cooper_timer_id_t cooper_timer_id = NULL;
 
 #if 0
 cooper_set_breakpoint_fn cooper_set_break = 0;
@@ -25,8 +27,7 @@ cooper_write_u64 cooper_write_u64 = 0;
 int
 cooper_init(void)
 {
-	memset(&cooper_state, '\0', sizeof cooper_state);
-	cooper_state.serial_timer = -1;
+	memcpy(&cooper_state, &cooper_state_default, sizeof cooper_state);
 	return 0;
 }
 
@@ -84,9 +85,24 @@ cooper_start_debugging(void)
 	if (!cooper_set_timer && !timespec_zero(&cooper_state.service_interval))
 		return -1;
 
-	cooper_state.serial_timer = cooper_set_timer(cooper_service_serial,
-						cooper_state.service_interval,
+	cooper_state.serial_timer = cooper_set_timer(&cooper_timer_id,
+						cooper_service_serial,
+						&cooper_state.service_interval,
 						NULL);
+#if 0
 	cooper_console_out("What fresh hell is this?");
+#endif
+	return 0;
+}
+
+int
+cooper_stop_debugging(void)
+{
+	if (!cooper_set_timer || !cooper_timer_id)
+		return -1;
+
+	cooper_state.serial_timer = cooper_set_timer(&cooper_timer_id, NULL,
+						     NULL, NULL);
+
 	return 0;
 }
