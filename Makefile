@@ -13,4 +13,4 @@ test : test.c cooper.a
 
 .PHONY: clean all
 clean :
-	@rm -vf *.o *.a *.E test
+	@rm -vf *.o *.a *.E test *.log *.strace
