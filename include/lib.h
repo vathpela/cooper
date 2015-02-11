@@ -52,7 +52,7 @@ memset(void *addr, int value, size_t bytes)
 		_val;						\
 	})
 
-static inline int
+static inline size_t
 __attribute__((unused))
 strlen(const char const *s)
 {
@@ -64,6 +64,21 @@ strlen(const char const *s)
 		e++;
 	return e-s;
 }
+
+static inline int
+__attribute__((unused))
+strncmp(const char const *s0, const char const *s1, size_t max)
+{
+	size_t i;
+	if (!s0 || !s1)
+		return s1-s0;
+	for (i = 0; i < max && s0[i] && s1[i]; i++)
+		if (s0[i] != s1[i])
+			return s1[i] - s0[i];
+	return 0;
+}
+
+#define MIN(x,y) (((x) < (y)) ? (x) : (y))
 
 #if 0
 static inline void *

@@ -10,5 +10,6 @@
 #define strcpy(d,s) (__builtin_strcpy ((d),(s)))
 #define likely(x) (__builtin_expect(!!(x), 1))
 #define unlikely(x) (__builtin_expect(!!(x), 0))
+#define memcpy(x,y,z) (__builtin_memcpy(x,y,z))
 
 #endif /* COOPER_BUILTINS_H */
